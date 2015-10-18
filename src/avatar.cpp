@@ -13,7 +13,7 @@ and may not be redistributed without written permission.*/
 bool init();
 
 //Loads media
-bool loadMedia();
+//bool loadMedia();
 
 //Frees media and shuts down SDL
 void close();
@@ -25,7 +25,7 @@ SDL_Surface* loadSurface( std::string path );
 Window* gWindow = NULL;
 
 //The surface contained by the window
-SDL_Surface* gScreenSurface = NULL;
+//SDL_Surface* gScreenSurface = NULL;
 
 //Current displayed PNG image
 SDL_Surface* gPNGSurface = NULL;
@@ -51,11 +51,12 @@ bool init()
     }
 
     //Get window surface
-    gScreenSurface = gWindow->getWindowSurface();
+    //gScreenSurface = gWindow->getWindowSurface();
 
     return true;
 }
 
+/*
 bool loadMedia(std::string filename)
 {
     //Loading success flag
@@ -72,21 +73,7 @@ bool loadMedia(std::string filename)
     return success;
 }
 
-void close()
-{
-    //Free loaded image
-    SDL_FreeSurface( gPNGSurface );
-    gPNGSurface = NULL;
 
-    //Destroy window
-    gWindow->destroyWindow();
-    delete gWindow;
-    gWindow = NULL;
-
-    //Quit SDL subsystems
-    IMG_Quit();
-    SDL_Quit();
-}
 
 SDL_Surface* loadSurface( std::string path )
 {
@@ -114,6 +101,7 @@ SDL_Surface* loadSurface( std::string path )
 
     return optimizedSurface;
 }
+*/
 
 int main( int argc, char* args[] )
 {
@@ -124,23 +112,29 @@ int main( int argc, char* args[] )
     }
     else
     {
+	    /*
         //Load media
         if( !loadMedia( "assets/images/arena.png" ) )
         {
             printf( "Failed to load media!\n" );
         }
-        else
+        else*/
         {
             //While application is running
             while( !readInput() )
             {
                 //Apply the PNG image
-                SDL_BlitSurface( gPNGSurface, NULL, gScreenSurface, NULL );
+                //SDL_BlitSurface( gPNGSurface, NULL, gScreenSurface, NULL );
 
                 //Update the surface
-                //SDL_UpdateWindowSurface( gWindow );
-                gWindow->updateWindowSurface();
-            }
+                //gWindow->updateWindowSurface();
+
+			//Render quad
+            printf( "bout to render quad!\n" );
+			gWindow->render();
+            printf( "after render quad!\n" );
+			
+			            }
         }
     }
 
@@ -148,4 +142,20 @@ int main( int argc, char* args[] )
     close();
 
     return 0;
+}
+
+void close()
+{
+    //Free loaded image
+    SDL_FreeSurface( gPNGSurface );
+    gPNGSurface = NULL;
+
+    //Destroy window
+    gWindow->destroyWindow();
+    delete gWindow;
+    gWindow = NULL;
+
+    //Quit SDL subsystems
+    IMG_Quit();
+    SDL_Quit();
 }

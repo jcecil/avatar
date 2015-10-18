@@ -2,7 +2,7 @@ AVATAR := avatar
 
 CC := g++
 CFLAGS := -w
-LFLAGS := -lSDL2 -lSDL2_image
+LFLAGS := -lSDL2 -lSDL2_image -lGL -lGLU -lGLEW
 INCLUDE := include
 SOURCE := src
 BUILD := build
