@@ -7,10 +7,7 @@ and may not be redistributed without written permission.*/
 #include <stdio.h>
 #include <string>
 #include "window.h"
-
-//Screen dimension constants
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+#include "input.h"
 
 //Starts up SDL and creates window
 bool init();
@@ -83,7 +80,7 @@ void close()
 
     //Destroy window
     gWindow->destroyWindow();
-    //SDL_DestroyWindow( gWindow );
+    delete gWindow;
     gWindow = NULL;
 
     //Quit SDL subsystems
@@ -134,37 +131,20 @@ int main( int argc, char* args[] )
         }
         else
         {
-            //Main loop flag
-            bool quit = false;
-
-            //Event handler
-            SDL_Event e;
-
             //While application is running
-            while( !quit )
+            while( !readInput() )
             {
-                //Handle events on queue
-                while( SDL_PollEvent( &e ) != 0 )
-                {
-                    //User requests quit
-                    if( e.type == SDL_QUIT )
-                    {
-                        quit = true;
-                    }
-                }
-
                 //Apply the PNG image
                 SDL_BlitSurface( gPNGSurface, NULL, gScreenSurface, NULL );
 
                 //Update the surface
                 //SDL_UpdateWindowSurface( gWindow );
-		gWindow->updateWindowSurface();
+                gWindow->updateWindowSurface();
             }
         }
     }
 
     //Free resources and close SDL
-    delete gWindow;
     close();
 
     return 0;
