@@ -5,6 +5,8 @@
 #include <GL/glew.h>
 #include <GL/glu.h>
 
+#include <glm/glm.hpp>
+
 class Player {
     GLuint VertexArrayID;
     // This will identify our vertex buffer
@@ -16,6 +18,8 @@ class Player {
         1.0f, -1.0f, 0.0f,
         0.0f,  1.0f, 0.0f,
     };
+
+
 
 public:
     Player();
