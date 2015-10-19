@@ -1,6 +1,5 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "window.h"
 #include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
 #include <GL/glu.h>
@@ -11,6 +10,8 @@
 #include <fstream>
 #include <algorithm>
 #include <vector>
+#include "window.h"
+#include "universe.h"
 
 using namespace std;
 
@@ -223,7 +224,7 @@ bool Window::initGL()
 }
 */
 
-void Window::render(Player* gPlayer)
+void Window::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -233,7 +234,9 @@ void Window::render(Player* gPlayer)
         //Bind program
         glUseProgram( gProgramID );
 
-	gPlayer->draw();
+	for (std::vector<Player*>::iterator it = Universe::Instance()->playerVector.begin(); it != Universe::Instance()->playerVector.end(); ++it){
+		(*it)->draw(gProgramID);
+	}
 
         //Enable vertex position
         glEnableVertexAttribArray( gVertexPos2DLocation );

@@ -9,6 +9,8 @@ and may not be redistributed without written permission.*/
 #include "window.h"
 #include "player.h"
 #include "input.h"
+#include "universe.h"
+#include "universe.h"
 
 //Starts up SDL and creates window
 bool init();
@@ -33,7 +35,7 @@ int main( int argc, char* args[] )
         while( !readInput() )
         {
             //Render quad
-            gWindow->render(gPlayer);
+            gWindow->render();
         }
     }
 
@@ -54,7 +56,9 @@ bool init()
 
     //Create window
     gWindow = new Window();
-    gPlayer = new Player();
+    //gPlayer = new Player();
+        printf( "derpsosifso" );
+    Universe::Instance()->playerVector.push_back(new Player());
 
     return true;
 }

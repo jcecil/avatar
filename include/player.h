@@ -19,7 +19,7 @@ class Player {
 
 public:
     Player();
-    void draw();
+    void draw(GLuint);
 };
 
 #endif

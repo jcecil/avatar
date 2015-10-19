@@ -33,7 +33,7 @@ public:
     SDL_Surface* getWindowSurface()    { return SDL_GetWindowSurface(gWindow); };
     void         destroyWindow()       ;
     void         updateWindowSurface() { SDL_UpdateWindowSurface(gWindow);     };
-    void         render(Player*);
+    void         render();
 };
 
 #endif
