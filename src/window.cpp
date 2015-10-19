@@ -4,6 +4,92 @@
 #include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
 #include <GL/glu.h>
+#include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+
+GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path){
+ 
+    // Create the shaders
+    GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+    GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+ 
+    // Read the Vertex Shader code from the file
+    std::string VertexShaderCode;
+    std::ifstream VertexShaderStream(vertex_file_path, std::ios::in);
+    if(VertexShaderStream.is_open())
+    {
+        std::string Line = "";
+        while(getline(VertexShaderStream, Line))
+            VertexShaderCode += "\n" + Line;
+        VertexShaderStream.close();
+    }
+ 
+    // Read the Fragment Shader code from the file
+    std::string FragmentShaderCode;
+    std::ifstream FragmentShaderStream(fragment_file_path, std::ios::in);
+    if(FragmentShaderStream.is_open()){
+        std::string Line = "";
+        while(getline(FragmentShaderStream, Line))
+            FragmentShaderCode += "\n" + Line;
+        FragmentShaderStream.close();
+    }
+ 
+    GLint Result = GL_FALSE;
+    int InfoLogLength;
+ 
+    // Compile Vertex Shader
+    printf("Compiling shader : %s\n", vertex_file_path);
+    char const * VertexSourcePointer = VertexShaderCode.c_str();
+    glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
+    glCompileShader(VertexShaderID);
+ 
+    // Check Vertex Shader
+    glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
+    glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+    std::vector<char> VertexShaderErrorMessage(InfoLogLength);
+    glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+    fprintf(stdout, "%s\n", &VertexShaderErrorMessage[0]);
+ 
+    // Compile Fragment Shader
+    printf("Compiling shader : %s\n", fragment_file_path);
+    char const * FragmentSourcePointer = FragmentShaderCode.c_str();
+    glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
+    glCompileShader(FragmentShaderID);
+ 
+    // Check Fragment Shader
+    glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
+    glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+    std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
+    glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
+    fprintf(stdout, "%s\n", &FragmentShaderErrorMessage[0]);
+ 
+    // Link the program
+    fprintf(stdout, "Linking program\n");
+    GLuint ProgramID = glCreateProgram();
+    glAttachShader(ProgramID, VertexShaderID);
+    glAttachShader(ProgramID, FragmentShaderID);
+    glLinkProgram(ProgramID);
+ 
+    // Check the program
+    glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
+    glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+    std::vector<char> ProgramErrorMessage( max(InfoLogLength, int(1)) );
+    glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+    fprintf(stdout, "%s\n", &ProgramErrorMessage[0]);
+ 
+    glDeleteShader(VertexShaderID);
+    glDeleteShader(FragmentShaderID);
+ 
+    return ProgramID;
+}
 
 Window::Window() {
     gWindow = SDL_CreateWindow( title, xpos, ypos, width, height, windowFlags );
@@ -11,7 +97,7 @@ Window::Window() {
     if( gWindow == NULL )
     {
         printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
-	return;
+        return;
     }
 
     //Use OpenGL 3.1 core
@@ -24,7 +110,6 @@ Window::Window() {
     if( gContext == NULL )
     {
         printf( "OpenGL context could not be created! SDL Error: %s\n", SDL_GetError() );
-        //success = false;
     }
     else
     {
@@ -42,100 +127,75 @@ Window::Window() {
             printf( "Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError() );
         }
 
+    gProgramID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");//glCreateProgram();
         //Initialize OpenGL
-        if( !initGL() )
-        {
-            printf( "Unable to initialize OpenGL!\n" );
-            //success = false;
-        }
+//        if( !initGL() )
+    //    {
+      //      printf( "Unable to initialize OpenGL!\n" );
+        //}
     }
 }
-
+/*
 bool Window::initGL()
 {
     //Success flag
     bool success = true;
 
     //Generate program
-    gProgramID = glCreateProgram();
 
-    //Create vertex shader
-    GLuint vertexShader = glCreateShader( GL_VERTEX_SHADER );
-
-    //Get vertex source
-    const GLchar* vertexShaderSource[] =
-    {
-        "#version 140\nin vec2 LVertexPos2D; void main() { gl_Position = vec4( LVertexPos2D.x, LVertexPos2D.y, 0, 1 ); }"
-    };
-
-    //Set vertex source
-    glShaderSource( vertexShader, 1, vertexShaderSource, NULL );
-
-    //Compile vertex source
-    glCompileShader( vertexShader );
-
-    //Check vertex shader for errors
-    GLint vShaderCompiled = GL_FALSE;
-    glGetShaderiv( vertexShader, GL_COMPILE_STATUS, &vShaderCompiled );
-    if( vShaderCompiled != GL_TRUE )
-    {
-        printf( "Unable to compile vertex shader %d!\n", vertexShader );
-        printShaderLog( vertexShader );
-        return false;
-    }
-    //Attach vertex shader to program
-    glAttachShader( gProgramID, vertexShader );
+    //Create vertex program
+    //glAttachShader( gProgramID, vertexShader );
 
 
     //Create fragment shader
-    GLuint fragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
+    //GLuint fragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
 
     //Get fragment source
-    const GLchar* fragmentShaderSource[] =
-    {
-        "#version 140\nout vec4 LFragment; void main() { LFragment = vec4( 1.0, 1.0, 1.0, 1.0 ); }"
-    };
+    //const GLchar* fragmentShaderSource[] =
+    //{
+    //    "#version 140\nout vec4 LFragment; void main() { LFragment = vec4( 1.0, 1.0, 1.0, 1.0 ); }"
+    //};
 
     //Set fragment source
-    glShaderSource( fragmentShader, 1, fragmentShaderSource, NULL );
+    //glShaderSource( fragmentShader, 1, fragmentShaderSource, NULL );
 
     //Compile fragment source
-    glCompileShader( fragmentShader );
+    //glCompileShader( fragmentShader );
 
     //Check fragment shader for errors
-    GLint fShaderCompiled = GL_FALSE;
-    glGetShaderiv( fragmentShader, GL_COMPILE_STATUS, &fShaderCompiled );
-    if( fShaderCompiled != GL_TRUE )
-    {
-        printf( "Unable to compile fragment shader %d!\n", fragmentShader );
-        printShaderLog( fragmentShader );
-        return false;
-    }
+    //GLint fShaderCompiled = GL_FALSE;
+    //glGetShaderiv( fragmentShader, GL_COMPILE_STATUS, &fShaderCompiled );
+    //if( fShaderCompiled != GL_TRUE )
+   // {
+      //  printf( "Unable to compile fragment shader %d!\n", fragmentShader );
+     //   printShaderLog( fragmentShader );
+      //  return false;
+    //}
     //Attach fragment shader to program
-    glAttachShader( gProgramID, fragmentShader );
+    //glAttachShader( gProgramID, fragmentShader );
 
 
     //Link program
-    glLinkProgram( gProgramID );
+    //glLinkProgram( gProgramID );
 
     //Check for errors
-    GLint programSuccess = GL_TRUE;
-    glGetProgramiv( gProgramID, GL_LINK_STATUS, &programSuccess );
-    if( programSuccess != GL_TRUE )
-    {
-        printf( "Error linking program %d!\n", gProgramID );
-        printProgramLog( gProgramID );
-        return false;
-    }
+    //GLint programSuccess = GL_TRUE;
+    //glGetProgramiv( gProgramID, GL_LINK_STATUS, &programSuccess );
+    //if( programSuccess != GL_TRUE )
+   // {
+     //   printf( "Error linking program %d!\n", gProgramID );
+     //   printProgramLog( gProgramID );
+      //  return false;
+    //}
     //Get vertex attribute location
-    gVertexPos2DLocation = glGetAttribLocation( gProgramID, "LVertexPos2D" );
-    if( gVertexPos2DLocation == -1 )
-    {
-        printf( "LVertexPos2D is not a valid glsl program variable!\n" );
-        return false;
-    }
+    //gVertexPos2DLocation = glGetAttribLocation( gProgramID, "LVertexPos2D" );
+    //if( gVertexPos2DLocation == -1 )
+    //{
+      //  printf( "LVertexPos2D is not a valid glsl program variable!\n" );
+     //   return false;
+    //}
     //Initialize clear color
-    glClearColor( 0.f, 0.f, 0.f, 1.f );
+    //glClearColor( 0.f, 0.f, 0.f, 1.f );
 
     //VBO data
     GLfloat vertexData[] =
@@ -159,33 +219,21 @@ bool Window::initGL()
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, gIBO );
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), indexData, GL_STATIC_DRAW );
 
-return true;
+    return true;
 }
+*/
 
-/*void handleKeys( unsigned char key, int x, int y )
+void Window::render(Player* gPlayer)
 {
-	//Toggle quad
-	if( key == 'q' )
-	{
-		gRenderQuad = !gRenderQuad;
-	}
-}
-
-void update()
-{
-	//No per frame update needed
-}*/
-
-void Window::render()
-{
-    //Clear color buffer
-    glClear( GL_COLOR_BUFFER_BIT );
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //Render quad
     if( true) //gRenderQuad )
     {
         //Bind program
         glUseProgram( gProgramID );
+
+	gPlayer->draw();
 
         //Enable vertex position
         glEnableVertexAttribArray( gVertexPos2DLocation );
@@ -205,8 +253,8 @@ void Window::render()
         glUseProgram( NULL );
     }
     //Update screen
-			SDL_GL_SwapWindow( gWindow );
-	
+    SDL_GL_SwapWindow( gWindow );
+
 
 }
 
@@ -215,7 +263,8 @@ void Window::destroyWindow() {
 
     //Deallocate program
     glDeleteProgram( gProgramID );
-//Destroy window
+
+    //Destroy window
     SDL_DestroyWindow( gWindow );
     gWindow = NULL;
 }

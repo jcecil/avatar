@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
 #include <GL/glu.h>
+#include "player.h"
 
 class Window {
     const char* title = "Mah Vidja game";
@@ -32,7 +33,7 @@ public:
     SDL_Surface* getWindowSurface()    { return SDL_GetWindowSurface(gWindow); };
     void         destroyWindow()       ;
     void         updateWindowSurface() { SDL_UpdateWindowSurface(gWindow);     };
-    void         render();
+    void         render(Player*);
 };
 
 #endif
