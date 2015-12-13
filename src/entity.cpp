@@ -22,11 +22,8 @@ Entity::Entity(GLfloat *vertexData, int vdLength){
 
 void Entity::draw(Camera *camera, GLuint programID){
 
-	// Model matrix : an identity matrix (model will be at the origin)
-	glm::mat4 Model      = glm::mat4(1.0f);  // Changes for each model !
-
 	// Our ModelViewProjection : multiplication of our 3 matrices
-	glm::mat4 MVP        = camera->Projection * camera->View * Model; // Remember, matrix multiplication is the other way around
+	glm::mat4 MVP        = camera->Projection * camera->View * model; // Remember, matrix multiplication is the other way around
 
 	// Get a handle for our "MVP" uniform.
 	// Only at initialisation time.
