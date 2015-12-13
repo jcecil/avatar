@@ -2,10 +2,8 @@
 #ifndef ENTITYFACTORY_H
 #define ENTITYFACTORY_H
 
-//#include <glm/glm.hpp>
-//#include <glm/gtc/matrix_transform.hpp>
 #include <GL/glu.h>
-#include "entity.h"
+#include "entity.hpp"
 
 class EntityFactory {
 	GLfloat triangleVertexData[9] = {
@@ -53,14 +51,13 @@ class EntityFactory {
 		1.0f,-1.0f, 1.0f
 	};
 
-
 	public:
 	Entity* triangleEntity() {
-		return new Entity(triangleVertexData);
+		return new Entity(triangleVertexData, sizeof(triangleVertexData));
 	};
 
 	Entity* cubeEntity(){
-		return new Entity(cubeVertexData);
+		return new Entity(cubeVertexData, sizeof(cubeVertexData));
 	};
 };
 

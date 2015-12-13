@@ -3,11 +3,11 @@
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <string>
-#include "window.h"
-#include "player.h"
-#include "input.h"
-#include "universe.h"
-#include "universe.h"
+#include "window.hpp"
+#include "player.hpp"
+#include "input.hpp"
+#include "universe.hpp"
+#include "universe.hpp"
 
 //Starts up SDL and creates window
 bool init();
@@ -21,52 +21,55 @@ Player* gPlayer = NULL;
 
 int main( int argc, char* args[] )
 {
-    //Start up SDL and create window
-    if( !init() )
-    {
-        printf( "Failed to initialize!\n" );
-    }
-    else
-    {
-        //While application is running
-        while( !readInput() )
-        {
-            //Render quad
-            gWindow->render();
-        }
-    }
+	//Start up SDL and create window
+	if( !init() )
+	{
+		printf( "Failed to initialize!\n" );
+	}
+	else
+	{
+		//While application is running
+		while( !readInput() )
+		{
+			Universe::Instance()->update();
 
-    //Free resources and close SDL
-    close();
+			//Render quad
+			gWindow->render();
+		}
+	}
 
-    return 0;
+	//Free resources and close SDL
+	close();
+
+	return 0;
 }
 
 bool init()
 {
-    //Initialize SDL
-    if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
-    {
-        printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
-        return false;
-    }
+	//Initialize SDL
+	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
+	{
+		printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
+		return false;
+	}
 
-    //Create window
-    gWindow = new Window();
-    //gPlayer = new Player();
-        printf( "derpsosifso" );
-    Universe::Instance()->playerVector.push_back(new Player());
+	//Create window
+	gWindow = new Window();
+	gPlayer = new Player();
+	Universe::Instance()->addPlayer(gPlayer);
+	Universe::Instance()->addPlayer(new Player(1));
 
-    return true;
+	return true;
 }
+
 void close()
 {
-    //Destroy window
-    gWindow->destroyWindow();
-    delete gWindow;
-    gWindow = NULL;
+	//Destroy window
+	gWindow->destroyWindow();
+	delete gWindow;
+	gWindow = NULL;
 
-    //Quit SDL subsystems
-    IMG_Quit();
-    SDL_Quit();
+	//Quit SDL subsystems
+	IMG_Quit();
+	SDL_Quit();
 }

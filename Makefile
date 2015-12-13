@@ -9,7 +9,7 @@ BUILD := build
 
 CPPFILES := $(foreach dir, $(SOURCE)/, $(notdir $(wildcard $(SOURCE)/*.cpp)))
 OBJFILES := $(addprefix $(BUILD)/, $(CPPFILES:.cpp=.o))
-DEPFILES := $(addprefix $(INCLUDE)/, $(CPPFILES:.cpp=.h))
+DEPFILES := $(addprefix $(INCLUDE)/, $(CPPFILES:.cpp=.hpp))
 
 all: $(AVATAR)
 
@@ -23,5 +23,5 @@ $(BUILD)/%.o: $(SOURCE)/%.cpp
 .PHONY: clean
 
 clean:
-		rm -f $(BUILD)/*.o
-		rm -f $(AVATAR)
+	rm -f $(BUILD)/*.o
+	rm -f $(AVATAR)
