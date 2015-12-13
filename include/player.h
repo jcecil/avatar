@@ -4,26 +4,18 @@
 
 #include <GL/glew.h>
 #include <GL/glu.h>
-
 #include <glm/glm.hpp>
+#include "camera.h"
+#include "entity.h"
+#include "entityFactory.h"
 
 class Player {
-    GLuint VertexArrayID;
-    // This will identify our vertex buffer
-    GLuint vertexbuffer;
+	Entity* entity;
+	Camera* camera;
 
-    // An array of 3 vectors which represents 3 vertices
-    GLfloat g_vertex_buffer_data[9] = {
-        -1.0f, -1.0f, 0.0f,
-        1.0f, -1.0f, 0.0f,
-        0.0f,  1.0f, 0.0f,
-    };
-
-
-
-public:
-    Player();
-    void draw(GLuint);
+	public:
+	Player();
+	void draw(GLuint);
 };
 
 #endif
