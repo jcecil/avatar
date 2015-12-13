@@ -64,7 +64,7 @@ bool init()
 	gWindow = new Window();
 	gPlayer = new Player();
 	Universe::Instance()->addPlayer(gPlayer);
-	Universe::Instance()->addPlayer(new Player(1));
+	//Universe::Instance()->addPlayer(new Player(1));
 
 	return true;
 }

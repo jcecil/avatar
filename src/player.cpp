@@ -10,7 +10,7 @@
 Player::Player() {
 	EntityFactory* factory = new EntityFactory();
 	camera = new Camera();
-	entity = factory->cubeEntity();
+	entity = factory->cubeEntityUV();
 }
 
 Player::Player(int derps) {

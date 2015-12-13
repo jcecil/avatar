@@ -17,6 +17,7 @@ class EntityFactory {
 		0.7f,  0.45f, 0.3f,
 		0.0f,  1.0f, 0.8f,
 	};
+	int triangleVertexCount = 3;
 
 	GLfloat cubeVertexData[36*3] = {
 		-1.0f,-1.0f,-1.0f, // triangle 1 : begin
@@ -96,14 +97,62 @@ class EntityFactory {
 		0.982f,  0.099f,  0.879f
 	};
 
+	GLfloat cubeUVData[36*2] = { 
+		0.000059f, 0.000004f, 
+		0.000103f, 0.336048f, 
+		0.335973f, 0.335903f, 
+		1.000023f, 0.000013f, 
+		0.667979f, 0.335851f, 
+		0.999958f, 0.336064f, 
+		0.667979f, 0.335851f, 
+		0.336024f, 0.671877f, 
+		0.667969f, 0.671889f, 
+		1.000023f, 0.000013f, 
+		0.668104f, 0.000013f, 
+		0.667979f, 0.335851f, 
+		0.000059f, 0.000004f, 
+		0.335973f, 0.335903f, 
+		0.336098f, 0.000071f, 
+		0.667979f, 0.335851f, 
+		0.335973f, 0.335903f, 
+		0.336024f, 0.671877f, 
+		1.000004f, 0.671847f, 
+		0.999958f, 0.336064f, 
+		0.667979f, 0.335851f, 
+		0.668104f, 0.000013f, 
+		0.335973f, 0.335903f, 
+		0.667979f, 0.335851f, 
+		0.335973f, 0.335903f, 
+		0.668104f, 0.000013f, 
+		0.336098f, 0.000071f, 
+		0.000103f, 0.336048f, 
+		0.000004f, 0.671870f, 
+		0.336024f, 0.671877f, 
+		0.000103f, 0.336048f, 
+		0.336024f, 0.671877f, 
+		0.335973f, 0.335903f, 
+		0.667969f, 0.671889f, 
+		1.000004f, 0.671847f, 
+		0.667979f, 0.335851f
+	};
+
+	int cubeVertexCount = 36;
+
+
+
 	public:
 	Entity* triangleEntity() {
-		return new Entity(triangleVertexData, triangleColorData, sizeof(triangleVertexData));
+		return new Entity(triangleVertexData, triangleColorData, NULL, triangleVertexCount);
 	};
 
 	Entity* cubeEntity(){
-		return new Entity(cubeVertexData, cubeColorData, sizeof(cubeVertexData));
+		return new Entity(cubeVertexData, cubeColorData, NULL, cubeVertexCount);
 	};
+
+	Entity* cubeEntityUV(){
+		return new Entity(cubeVertexData, NULL, cubeUVData, cubeVertexCount);
+	};
+
 };
 
 #endif // entityFactory.h

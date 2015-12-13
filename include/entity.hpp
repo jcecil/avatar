@@ -7,15 +7,20 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GL/glu.h>
-
+#include "media.hpp"
 
 class Entity {
 	GLuint VertexArrayID;
 	GLuint vertexbuffer;
 	GLuint colorbuffer;
+	GLuint uvbuffer;
+
+	GLuint Texture;
+	GLuint TextureID;
 
 	GLfloat* vertexData;
 	GLfloat* colorData;
+	GLfloat* uvData;
 
 	public:
 	glm::vec3 position;
@@ -26,7 +31,7 @@ class Entity {
 
 	void draw(Camera* camera, GLuint programID);
 	void update(unsigned int);
-	Entity(GLfloat*, GLfloat*, int);
+	Entity(GLfloat*, GLfloat*, GLfloat*, int);
 };
 
 #endif // entity.h
