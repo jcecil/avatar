@@ -23,7 +23,7 @@ class Universe {
 		currentCamera = player->camera;
 		playerVector.push_back(player);};
 	void draw(GLuint programID);
-	void update();
+	void update(unsigned int);
 };
 
 #endif

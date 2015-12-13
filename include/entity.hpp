@@ -11,20 +11,22 @@
 
 class Entity {
 	GLuint VertexArrayID;
-	// This will identify our vertex buffer
 	GLuint vertexbuffer;
+	GLuint colorbuffer;
 
-	GLfloat* g_vertex_buffer_data;
+	GLfloat* vertexData;
+	GLfloat* colorData;
 
 	public:
 	glm::vec3 position;
 	glm::vec3 direction;
 	glm::vec3 up;
 	glm::mat4 model = glm::mat4(1.0f);
-	int vertexDataLengh;
+	int vertexDataLength;
 
 	void draw(Camera* camera, GLuint programID);
-	Entity(GLfloat *vertexData, int);
+	void update(unsigned int);
+	Entity(GLfloat*, GLfloat*, int);
 };
 
 #endif // entity.h

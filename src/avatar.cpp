@@ -28,11 +28,18 @@ int main( int argc, char* args[] )
 	}
 	else
 	{
+		Uint32 lastUpdateTime = SDL_GetTicks();
 		//While application is running
 		while( !readInput() )
 		{
-			Universe::Instance()->update();
+			Uint32 currentTime = SDL_GetTicks();
+			Uint32 deltaTime = currentTime - lastUpdateTime;
 
+			if (deltaTime > 1)
+			{
+				lastUpdateTime = currentTime;
+				Universe::Instance()->update(deltaTime);
+			}
 			//Render quad
 			gWindow->render();
 		}

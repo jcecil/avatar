@@ -17,6 +17,7 @@ class Player {
 		Player();
 		Player(int);
 		void draw(Camera*, GLuint);
+		void update(unsigned int);
 };
 
 #endif
