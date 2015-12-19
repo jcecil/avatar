@@ -34,14 +34,14 @@ Entity::Entity(GLfloat *vertexDataIn, GLfloat *colorDataIn, GLfloat *uvDataIn, i
 
 }
 
-void Entity::draw(Camera *camera, GLuint programID){
+void Entity::draw(glm::mat4 PV, GLuint programID){
 
 	// Move this to constructor when you get a chance
 	// Get a handle for our "myTextureSampler" uniform
 	TextureID  = glGetUniformLocation(programID, "myTextureSampler");
 
 	// Our ModelViewProjection : multiplication of our 3 matrices
-	glm::mat4 MVP        = camera->Projection * camera->View * model; // Remember, matrix multiplication is the other way around
+	glm::mat4 MVP        = PV * model; // Remember, matrix multiplication is the other way around
 
 	// Get a handle for our "MVP" uniform.
 	// Only at initialisation time.
@@ -112,5 +112,5 @@ void Entity::update(unsigned int deltaTime){
 	  glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 	  glBufferData(GL_ARRAY_BUFFER, vertexDataLength, colorData, GL_STATIC_DRAW);
 	  */
-
+	model = glm::translate(glm::mat4(1.0f), position);
 }

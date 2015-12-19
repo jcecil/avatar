@@ -22,9 +22,10 @@ Player::Player(int derps) {
 }
 
 void Player::draw(Camera* currentCamera, GLuint programID) {
-	entity->draw(currentCamera, programID);
+	entity->draw(currentCamera->PV(), programID);
 }
 
-void Player::update(unsigned int deltaTime){
+void Player::update(int deltax, int deltay, int wheelx, int wheely, unsigned int deltaTime){
 	entity->update(deltaTime);
+	camera->update(deltax, deltay, wheelx, wheely,deltaTime, entity); 
 }

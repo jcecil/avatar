@@ -10,8 +10,10 @@ Universe* Universe::Instance()
 }
 
 void Universe::draw(GLuint programID){
+	glm::mat4 PV = currentCamera->PV();//rojection * currentCamera->View;
+
 	for (std::vector<Entity*>::iterator it = entityVector.begin(); it != entityVector.end(); ++it){                                         
-		(*it)->draw(currentCamera, programID); 
+		(*it)->draw(PV, programID); 
 	}
 
 	for (std::vector<Player*>::iterator it = playerVector.begin(); it != playerVector.end(); ++it){                                         
@@ -24,7 +26,7 @@ void Universe::update(unsigned int deltaTime){
 		(*it)->update(deltaTime); 
 	}
 
-	for (std::vector<Player*>::iterator it = playerVector.begin(); it != playerVector.end(); ++it){                                         
-		(*it)->update(deltaTime); 
-	}
+	//	for (std::vector<Player*>::iterator it = playerVector.begin(); it != playerVector.end(); ++it){                                         
+	//		(*it)->update(deltaTime); 
+	//	}
 }

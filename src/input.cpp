@@ -1,40 +1,63 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include "input.hpp"
 
 void PrintKeyInfo( SDL_KeyboardEvent *key ) {
-    if( key->type == SDL_KEYUP )
-        printf( "Release:- " );
-    else
-        printf( "Press:- " );
+	if( key->type == SDL_KEYUP )
+		printf( "Release:- " );
+	else
+		printf( "Press:- " );
 
-    printf( "Scancode: 0x%02X", key->keysym.scancode );
-    printf( ", Name: %s", SDL_GetKeyName( key->keysym.sym ) );
-    if( key->type == SDL_KEYDOWN ) {
-    }
-    printf( "\n" );
+	printf( "Scancode: 0x%02X", key->keysym.scancode );
+	printf( ", Name: %s", SDL_GetKeyName( key->keysym.sym ) );
+	if( key->type == SDL_KEYDOWN ) {
+	}
+	printf( "\n" );
 }
 
-bool readInput() {
-    static SDL_Event e;
-    static bool quit = false;
 
-    //Handle events on queue
-    while( SDL_PollEvent( &e ) != 0 )
-    {
-        switch(e.type) {
-        case SDL_QUIT:
-            quit = true;
-            break;
-        case SDL_KEYDOWN:
-        case SDL_KEYUP:
-            PrintKeyInfo(&e.key);
-            if (e.key.keysym.sym == SDLK_ESCAPE) {
-                quit = true;
-            }
-            break;
-        }
-    }
-    return quit;
+void PrintMotionInfo( SDL_MouseMotionEvent *motion ) {
+	printf( "XRel: %d", motion->xrel );
+	printf( ", YRel: %d", motion->yrel );
+	printf( "\n" );
+}
+
+void PrintWheelInfo( SDL_MouseWheelEvent *wheel ) {
+	printf( "X: %d", wheel->x );
+	printf( ", Y: %d", wheel->y );
+	printf( "\n" );
+}
+
+
+bool readInput() {
+	static SDL_Event e;
+	static bool quit = false;
+
+	//Handle events on queue
+	while( SDL_PollEvent( &e ) != 0 )
+	{
+		switch(e.type) {
+			case SDL_QUIT:
+				quit = true;
+				break;
+			case SDL_KEYDOWN:
+			case SDL_KEYUP:
+				PrintKeyInfo(&e.key);
+				if (e.key.keysym.sym == SDLK_ESCAPE) {
+					quit = true;
+				}
+				break;
+			case SDL_MOUSEMOTION:
+				//			PrintMotionInfo(&e.motion);
+				Game::Instance()->mouse(e.motion.xrel,e.motion.yrel);
+				break;
+			case SDL_MOUSEWHEEL:
+				PrintWheelInfo(&e.wheel);
+				Game::Instance()->wheel(e.wheel.x,e.wheel.y);
+				break;
+		}
+	}
+	return quit;
 }
 
 

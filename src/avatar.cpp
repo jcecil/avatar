@@ -7,7 +7,7 @@
 #include "player.hpp"
 #include "input.hpp"
 #include "universe.hpp"
-#include "universe.hpp"
+#include "game.hpp"
 
 //Starts up SDL and creates window
 bool init();
@@ -38,7 +38,8 @@ int main( int argc, char* args[] )
 			if (deltaTime > 1)
 			{
 				lastUpdateTime = currentTime;
-				Universe::Instance()->update(deltaTime);
+				Game::Instance()->update(deltaTime);
+				//	Universe::Instance()->update(deltaTime);
 			}
 			//Render quad
 			gWindow->render();
@@ -63,8 +64,12 @@ bool init()
 	//Create window
 	gWindow = new Window();
 	gPlayer = new Player();
+	Game::Instance()->mainPlayer = gPlayer;
 	Universe::Instance()->addPlayer(gPlayer);
 	//Universe::Instance()->addPlayer(new Player(1));
+
+	SDL_SetRelativeMouseMode(SDL_TRUE);
+	glEnable(GL_CULL_FACE);
 
 	return true;
 }

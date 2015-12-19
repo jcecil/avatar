@@ -1,7 +1,6 @@
 // entity.h
 #ifndef ENTITY_H
 #define ENTITY_H
-#include "camera.hpp"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -23,13 +22,13 @@ class Entity {
 	GLfloat* uvData;
 
 	public:
-	glm::vec3 position;
+	glm::vec3 position = glm::vec3(0.f, 0.f, 0.f);
 	glm::vec3 direction;
 	glm::vec3 up;
 	glm::mat4 model = glm::mat4(1.0f);
 	int vertexDataLength;
 
-	void draw(Camera* camera, GLuint programID);
+	void draw(glm::mat4 PV, GLuint programID);
 	void update(unsigned int);
 	Entity(GLfloat*, GLfloat*, GLfloat*, int);
 };
