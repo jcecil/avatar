@@ -1,87 +1,35 @@
-//Using SDL, SDL_image, standard IO, and strings
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <stdio.h>
-#include <string>
-#include "window.hpp"
-#include "player.hpp"
-#include "input.hpp"
-#include "universe.hpp"
-#include "game.hpp"
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
 
-//Starts up SDL and creates window
-bool init();
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
 
-//Frees media and shuts down SDL
-void close();
+#include <iostream>
 
-//The window we'll be rendering to
-Window* gWindow = NULL;
-Player* gPlayer = NULL;
+int main() {
+    glfwInit();
 
-int main( int argc, char* args[] )
-{
-	//Start up SDL and create window
-	if( !init() )
-	{
-		printf( "Failed to initialize!\n" );
-	}
-	else
-	{
-		Uint32 lastUpdateTime = SDL_GetTicks();
-		//While application is running
-		while( !readInput() )
-		{
-			Uint32 currentTime = SDL_GetTicks();
-			Uint32 deltaTime = currentTime - lastUpdateTime;
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Vulkan window", nullptr, nullptr);
 
-			if (deltaTime > 1)
-			{
-				lastUpdateTime = currentTime;
-				Game::Instance()->update(deltaTime);
-				//	Universe::Instance()->update(deltaTime);
-			}
-			//Render quad
-			gWindow->render();
-		}
-	}
+    uint32_t extensionCount = 0;
+    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
 
-	//Free resources and close SDL
-	close();
+    std::cout << extensionCount << " extensions supported" << std::endl;
 
-	return 0;
-}
+    glm::mat4 matrix;
+    glm::vec4 vec;
+    auto test = matrix * vec;
 
-bool init()
-{
-	//Initialize SDL
-	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
-	{
-		printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
-		return false;
-	}
+    while(!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
+    }
 
-	//Create window
-	gWindow = new Window();
-	gPlayer = new Player();
-	Game::Instance()->mainPlayer = gPlayer;
-	Universe::Instance()->addPlayer(gPlayer);
-	//Universe::Instance()->addPlayer(new Player(1));
+    glfwDestroyWindow(window);
 
-	SDL_SetRelativeMouseMode(SDL_TRUE);
-	glEnable(GL_CULL_FACE);
+    glfwTerminate();
 
-	return true;
-}
-
-void close()
-{
-	//Destroy window
-	gWindow->destroyWindow();
-	delete gWindow;
-	gWindow = NULL;
-
-	//Quit SDL subsystems
-	IMG_Quit();
-	SDL_Quit();
+    return 0;
 }
